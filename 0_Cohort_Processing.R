@@ -236,6 +236,7 @@ demo = as.data.table(dat)[, list(age          = keepUnique(Age),
                           by = "MRN"]
 
 #format variables
+demo$age = as.numeric(demo$age)
 demo$gender = as.numeric(demo$gender == "Male")
 demo$payor = as.numeric(grepl("MEDICAID|MEDICARE", demo$payor))
 demo$screened = as.numeric(demo$screened)
