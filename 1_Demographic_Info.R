@@ -22,13 +22,6 @@ load(file = "./Data/cohort.RData")
 case = dat[dat$event == 1, ]
 cont = dat[dat$event == 0, ]
 
-
-######################age info######################################
-
-fancyP(quantile(as.numeric(dat$age), probs = c(0.50, 0.25, 0.75))/100)
-fancyP(quantile(as.numeric(dat$age[dat$event == 1]), probs = c(0.50, 0.25, 0.75))/100)
-fancyP(quantile(as.numeric(dat$age[dat$event == 0]), probs = c(0.50, 0.25, 0.75))/100)
-
 #####################get demo summaries#############################
 
 #create placeholder
@@ -42,8 +35,7 @@ colnames(tbl_1) = c(paste0("Total (n=", fancyN(nrow(dat)), ")"),
 #define rownames
 rownames(tbl_1) = c("Gender, No. (%)", 
                     "Male", "Female",
-                    "Age group, No. (%)", 
-                    "10-13", "14-18", 
+                    "Age, y, median (IQR)", 
                     "Race and ethnicity, No. (%)", 
                     "Black or African American", "Hispanic or Latino", "Other", "White",
                     "Medicaid or Medicare, No. (%)", 
@@ -87,37 +79,22 @@ cont_n = fancyN(cont_n)
 
 tbl_1[3, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
-#############10-13 years old##############
+#############age##############
 
-n = sum(dat$age == 0)
-p = fancyP(n/nrow(dat))
-n = fancyN(n)
+#descriptive info
+overall_age = quantile(as.numeric(dat$age), probs = c(0.50, 0.25, 0.75))
+overall_med = fancyP(overall_age[1]/100)
+overall_iqr = paste0(fancyP(overall_age[2]/100), "-", fancyP(overall_age[3]/100))
 
-case_n = sum(case$age == 0)
-case_p = fancyP(case_n/nrow(case))
-case_n = fancyN(case_n)
+case_age    = quantile(as.numeric(case$age), probs = c(0.50, 0.25, 0.75))
+case_med = fancyP(case_age[1]/100)
+case_iqr = paste0(fancyP(case_age[2]/100), "-", fancyP(case_age[3]/100))
 
-cont_n = sum(cont$age == 0)
-cont_p = fancyP(cont_n/nrow(cont))
-cont_n = fancyN(cont_n)
+cont_age    = quantile(as.numeric(cont$age), probs = c(0.50, 0.25, 0.75))
+cont_med = fancyP(cont_age[1]/100)
+cont_iqr = paste0(fancyP(cont_age[2]/100), "-", fancyP(cont_age[3]/100))
 
-tbl_1[5, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
-
-#############14-18 years old##############
-
-n = sum(dat$age == 1)
-p = fancyP(n/nrow(dat))
-n = fancyN(n)
-
-case_n = sum(case$age == 1)
-case_p = fancyP(case_n/nrow(case))
-case_n = fancyN(case_n)
-
-cont_n = sum(cont$age == 1)
-cont_p = fancyP(cont_n/nrow(cont))
-cont_n = fancyN(cont_n)
-
-tbl_1[6, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[4, ] = c(combo(overall_med, overall_iqr), combo(case_med, case_iqr), combo(cont_med, cont_iqr))
 
 #############Black##############
 
@@ -133,7 +110,7 @@ cont_n = sum(cont$race == "Black")
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[8, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[6, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Hispanic##############
 
@@ -149,7 +126,7 @@ cont_n = sum(cont$race == "Hispanic")
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[9, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[7, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Other race##############
 
@@ -165,7 +142,7 @@ cont_n = sum(cont$race == "Other")
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[10, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[8, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############White##############
 
@@ -181,7 +158,7 @@ cont_n = sum(cont$race == "White")
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[11, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[9, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Payor yes##############
 
@@ -197,7 +174,7 @@ cont_n = sum(cont$payor == 1)
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[13, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[11, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Payor no##############
 
@@ -213,7 +190,7 @@ cont_n = sum(cont$payor == 0)
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[14, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[12, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 ############Incomplete screen#############
 
@@ -229,7 +206,7 @@ cont_n = sum(cont$screened == 0)
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[16, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[14, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Negative screen##############
 
@@ -245,7 +222,7 @@ cont_n = sum(cont$risk_group < 2 & cont$screened == 1)
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[17, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[15, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 #############Positive screen##############
 
@@ -261,7 +238,7 @@ cont_n = sum(cont$risk_group >= 2 & cont$screened == 1)
 cont_p = fancyP(cont_n/nrow(cont))
 cont_n = fancyN(cont_n)
 
-tbl_1[18, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
+tbl_1[16, ] = c(combo(n, p), combo(case_n, case_p), combo(cont_n, cont_p))
 
 ###########History lookback###############
 
@@ -269,7 +246,7 @@ med = getMedianIQR(dat$history_time)
 case_med = getMedianIQR(case$history_time)
 cont_med = getMedianIQR(cont$history_time)
 
-tbl_1[20, ] = c(med, case_med, cont_med)
+tbl_1[18, ] = c(med, case_med, cont_med)
 
 ##############Follow obs##################
 
@@ -277,7 +254,7 @@ med = getMedianIQR(dat$follow_time)
 case_med = getMedianIQR(case$follow_time)
 cont_med = getMedianIQR(cont$follow_time)
 
-tbl_1[21, ] = c(med, case_med, cont_med)
+tbl_1[19, ] = c(med, case_med, cont_med)
 
 #####################get demo comparisons#############################
 
@@ -306,11 +283,7 @@ colnames(supp_1) = c("p")
 supp_1[1] = fancyPval(chisq.test(dat$event, dat$gender)$p.value)
 
 #age
-supp_1[2] = fancyPval(chisq.test(dat$event, dat$age)$p.value)
-
-#age continous
-dat$age = as.numeric(dat$age)
-fancyPval(wilcox.test(age ~ event, data = dat, paired = F)$p.value)
+supp_1[2] = fancyPval(wilcox.test(age ~ event, data = dat)$p.value)
 
 #race and ethnicity
 supp_1[3] = fancyPval(chisq.test(dat$event, dat$race)$p.value)
